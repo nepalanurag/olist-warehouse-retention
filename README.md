@@ -9,6 +9,8 @@ This repo is the warehouse and analysis built to answer that, on the
 tables, ~100k orders from 2016–2018). The stakeholder framing, metric
 definitions and caveats live in `docs/stakeholder_brief.md`.
 
+**Live dashboard (Tableau Public):** [Olist Customers Almost Never Come Back — cohort retention + repeat rate by state](https://public.tableau.com/app/profile/anurag.nepal/viz/OlistCustomersAlmostNeverComeBackCohortRetentiondbtDuckDBwarehouse/Dashboard1)
+
 ## The answer
 
 - **Repeat buying barely exists.** Of 96,096 distinct customers, **2,997
