@@ -1,0 +1,17 @@
+name: olist_warehouse
+version: 1.0.0
+config-version: 2
+profile: olist_warehouse
+
+model-paths: ["models"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  olist_warehouse:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
+    analysis:
+      +materialized: table

@@ -1,0 +1,46 @@
+=== FROM-SCRATCH RUN: 2026-10-23 02:22 UTC ===
+$ rm -f warehouse.duckdb && rm -rf target
+$ venv/bin/python scripts/load_raw.py
+raw_olist.customers: 99441 rows
+raw_olist.orders: 99441 rows
+raw_olist.order_items: 112650 rows
+raw_olist.order_payments: 103886 rows
+raw_olist.order_reviews: 99224 rows
+raw_olist.products: 32951 rows
+raw_olist.sellers: 3095 rows
+raw_olist.product_category_name_translation: 71 rows
+$ venv/bin/dbt build --profiles-dir .
+02:22:52  42 of 52 START test relationships_fact_order_items_customer_unique_id__customer_unique_id__ref_dim_customers_  [RUN]
+02:22:52  43 of 52 START test relationships_fact_order_items_product_id__product_id__ref_dim_products_  [RUN]
+02:22:52  41 of 52 PASS assert_order_items_unique_grain .................................. [PASS in 0.25s]
+02:22:52  43 of 52 PASS relationships_fact_order_items_product_id__product_id__ref_dim_products_  [PASS in 0.24s]
+02:22:52  42 of 52 PASS relationships_fact_order_items_customer_unique_id__customer_unique_id__ref_dim_customers_  [PASS in 0.25s]
+02:22:52  44 of 52 START test relationships_fact_order_items_seller_id__seller_id__ref_dim_sellers_  [RUN]
+02:22:52  32 of 52 OK created sql table model main.fact_orders ........................... [OK in 1.80s]
+02:22:52  45 of 52 START test accepted_values_fact_orders_order_status__delivered__shipped__canceled__unavailable__invoiced__processing__created__approved  [RUN]
+02:22:52  46 of 52 START test not_null_fact_orders_customer_unique_id .................... [RUN]
+02:22:52  47 of 52 START test not_null_fact_orders_order_id .............................. [RUN]
+02:22:53  44 of 52 PASS relationships_fact_order_items_seller_id__seller_id__ref_dim_sellers_  [PASS in 0.13s]
+02:22:53  46 of 52 PASS not_null_fact_orders_customer_unique_id .......................... [PASS in 0.13s]
+02:22:53  47 of 52 PASS not_null_fact_orders_order_id .................................... [PASS in 0.12s]
+02:22:53  45 of 52 PASS accepted_values_fact_orders_order_status__delivered__shipped__canceled__unavailable__invoiced__processing__created__approved  [PASS in 0.13s]
+02:22:53  48 of 52 START test relationships_fact_order_items_order_id__order_id__ref_fact_orders_  [RUN]
+02:22:53  49 of 52 START test relationships_fact_orders_customer_unique_id__customer_unique_id__ref_dim_customers_  [RUN]
+02:22:53  50 of 52 START test unique_fact_orders_order_id ................................ [RUN]
+02:22:53  50 of 52 PASS unique_fact_orders_order_id ...................................... [PASS in 0.12s]
+02:22:53  51 of 52 START sql table model main.cohort_retention ........................... [RUN]
+02:22:53  48 of 52 PASS relationships_fact_order_items_order_id__order_id__ref_fact_orders_  [PASS in 0.16s]
+02:22:53  49 of 52 PASS relationships_fact_orders_customer_unique_id__customer_unique_id__ref_dim_customers_  [PASS in 0.16s]
+02:22:53  52 of 52 START sql table model main.segment_retention .......................... [RUN]
+02:22:53  52 of 52 OK created sql table model main.segment_retention ..................... [OK in 0.15s]
+02:22:53  51 of 52 OK created sql table model main.cohort_retention ...................... [OK in 0.21s]
+02:22:53  
+02:22:53  Finished running 8 table models, 36 data tests, 8 view models in 0 hours 0 minutes and 6.73 seconds (6.73s).
+02:22:53  
+02:22:53  Completed successfully
+02:22:53  
+02:22:53  Done. PASS=52 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=52
+$ venv/bin/python scripts/export_outputs.py
+outputs/cohort_retention.csv: 225 rows
+outputs/segment_retention.csv: 27 rows
+=== END ===
