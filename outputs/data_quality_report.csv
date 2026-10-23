@@ -1,0 +1,7 @@
+check_name,check_description,affected_count,total_count,affected_share,threshold_note
+duplicate_review_ids,review_id values appearing on 2+ rows in stg_order_reviews (one review attached to every item of a multi-item order),789,98410,0.008,expected to grow with multi-item orders; a step change suggests a source re-extract
+orders_without_delivery_date,"delivered orders with no order_delivered_customer_date (excludes canceled/unavailable, which never deliver)",8,96478,0.0001,review if share of delivered orders moves by more than 1pp between source drops
+orders_without_items,fact_orders.item_count = 0: orders with no item rows in the source extract,775,99441,0.0078,review if share moves by more than 1pp between source drops
+orders_without_payments,"orders with no payment rows at all in stg_order_payments (orders whose payment rows sum to zero are a separate, smaller oddity)",1,99441,0.0,any increase above the current 1 order is a source anomaly
+products_without_category,dim_products rows with no product_category_name in the source extract,610,32951,0.0185,review if count grows materially; these products are invisible to category cuts
+reviews_without_text,reviews with no comment message (58.7% at first build; the silent majority of reviewers),58247,99224,0.587,"informational: tracks review-engagement mix, not a defect to fix"

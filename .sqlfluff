@@ -1,0 +1,33 @@
+[sqlfluff]
+# dbt project: SQL is Jinja-templated, so lint through the dbt templater
+# (requires dbt + profiles, i.e. run after the project deps are installed).
+dialect = duckdb
+templater = dbt
+max_line_length = 100
+
+# Rule scoping — adopting lint on an existing, passing codebase (documented
+# here rather than silently disabled). Enforced: parsing, templating, layout
+# (indentation/newlines/spacing), references.qualification, structure and
+# ambiguity rules that do not conflict with house style. Excluded, with
+# reasons:
+# - capitalisation.* : this project is deliberately all-lowercase SQL.
+# - layout.long_lines : prose comments and test value lists run long.
+# - aliasing.* (AL01/AL03/AL05) : implicit aliases (`from t x`) are the
+#   established house style across all models.
+# - structure.using (ST07) : JOIN ... USING on same-named keys is the house
+#   style and is unambiguous in DuckDB.
+# - ambiguous.join (AM05) : a bare JOIN means INNER JOIN throughout.
+# - ambiguous.column_references (AM06) : analysis models group by ordinals
+#   after UNION ALL, where branch column names differ by design.
+# - structure.column_order (ST06) : staging models keep source column order
+#   on purpose (1:1 with the published extract).
+# - references.keywords (RF04) : dim_date ships columns named year, month,
+#   day; renaming them would break downstream consumers of the contract.
+exclude_rules = capitalisation, layout.long_lines, aliasing, structure.using,
+    structure.column_order, ambiguous.join, ambiguous.column_references,
+    references.keywords
+
+[sqlfluff:templater:dbt]
+profiles_dir = .
+profile = olist_warehouse
+target = dev

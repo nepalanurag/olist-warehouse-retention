@@ -14,6 +14,11 @@ with ranked as (
     from {{ ref('stg_customers') }} c
     join {{ ref('stg_orders') }} o using (customer_id)
 )
-select customer_unique_id, customer_city, customer_state, customer_zip_code_prefix
+
+select
+    customer_unique_id,
+    customer_city,
+    customer_state,
+    customer_zip_code_prefix
 from ranked
 where rn = 1

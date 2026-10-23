@@ -10,4 +10,4 @@ select
     i.freight_value
 from {{ ref('stg_order_items') }} i
 join {{ ref('stg_orders') }} o using (order_id)
-join {{ ref('stg_customers') }} c on c.customer_id = o.customer_id
+join {{ ref('stg_customers') }} c on o.customer_id = c.customer_id

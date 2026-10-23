@@ -8,11 +8,15 @@ with items as (
     from {{ ref('stg_order_items') }}
     group by 1
 ),
+
 payments as (
-    select order_id, sum(payment_value) as payment_value
+    select
+        order_id,
+        sum(payment_value) as payment_value
     from {{ ref('stg_order_payments') }}
     group by 1
 )
+
 select
     o.order_id,
     c.customer_unique_id,
@@ -20,8 +24,10 @@ select
     o.order_purchase_timestamp,
     o.order_purchase_timestamp::date as order_date,
     o.order_delivered_customer_date::date as delivered_date,
-    date_diff('day', o.order_purchase_timestamp::date,
-              o.order_delivered_customer_date::date) as days_to_deliver,
+    date_diff(
+        'day', o.order_purchase_timestamp::date,
+        o.order_delivered_customer_date::date
+    ) as days_to_deliver,
     coalesce(i.item_count, 0) as item_count,
     coalesce(i.items_value, 0) as items_value,
     coalesce(i.freight_value, 0) as freight_value,

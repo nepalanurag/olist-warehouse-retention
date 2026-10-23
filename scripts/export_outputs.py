@@ -8,6 +8,8 @@ con = duckdb.connect("warehouse.duckdb", read_only=True)
 for table, path in [
     ("cohort_retention", "outputs/cohort_retention.csv"),
     ("segment_retention", "outputs/segment_retention.csv"),
+    ("repeat_drivers", "outputs/repeat_drivers.csv"),
+    ("data_quality_report", "outputs/data_quality_report.csv"),
 ]:
     con.execute(f"copy (select * from main.{table}) to '{path}' (header, delimiter ',')")
     n = con.execute(f"select count(*) from main.{table}").fetchone()[0]

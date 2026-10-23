@@ -11,16 +11,24 @@ with customer_orders as (
             over (partition by customer_unique_id) as cohort_month
     from {{ ref('fact_orders') }}
 ),
+
 activity as (
-    select distinct cohort_month, customer_unique_id, order_month
+    select distinct
+        cohort_month,
+        customer_unique_id,
+        order_month
     from customer_orders
 ),
+
 cohort_sizes as (
-    select cohort_month, count(distinct customer_unique_id) as cohort_size
+    select
+        cohort_month,
+        count(distinct customer_unique_id) as cohort_size
     from activity
     where order_month = cohort_month
     group by 1
 )
+
 select
     a.cohort_month,
     date_diff('month', a.cohort_month, a.order_month) as month_index,

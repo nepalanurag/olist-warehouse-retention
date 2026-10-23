@@ -10,6 +10,7 @@ with per_customer as (
     join {{ ref('dim_customers') }} c using (customer_unique_id)
     group by 1, 2
 )
+
 select
     customer_state,
     count(*) as customers,

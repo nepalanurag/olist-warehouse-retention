@@ -1,0 +1,32 @@
+version: 2
+exposures:
+  - name: retention_analysis_outputs
+    label: Retention analysis outputs (growth-team decision inputs)
+    description: >-
+      Published CSV extracts the growth team reads to decide where the
+      retention budget goes: monthly cohort retention, repeat rate by
+      customer state, and repeat-purchase drivers by first-order attributes.
+      Exported by scripts/export_outputs.py to outputs/.
+    type: application
+    maturity: high
+    owner:
+      name: Analytics (warehouse maintainer)
+    depends_on:
+      - ref('cohort_retention')
+      - ref('segment_retention')
+      - ref('repeat_drivers')
+  - name: data_quality_report
+    label: Data quality report (source-monitoring output)
+    description: >-
+      Monitored counts of known source-data defects (orders without items or
+      payments, missing delivery dates, duplicate review ids, reviews without
+      text, products without category). Exported by scripts/export_outputs.py
+      to outputs/data_quality_report.csv so each build leaves a comparable
+      snapshot; a sudden jump means the source extract changed, not the
+      warehouse.
+    type: application
+    maturity: high
+    owner:
+      name: Analytics (warehouse maintainer)
+    depends_on:
+      - ref('data_quality_report')

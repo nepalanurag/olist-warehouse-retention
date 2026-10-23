@@ -1,0 +1,24 @@
+driver,dimension_value,customers,repeat_customers,repeat_rate
+first_order_category,all_other_categories,34075,962,0.0282
+first_order_category,bed_bath_table,8858,399,0.045
+first_order_category,health_beauty,8527,247,0.029
+first_order_category,sports_leisure,7364,289,0.0392
+first_order_category,computers_accessories,6435,192,0.0298
+first_order_category,furniture_decor,6053,276,0.0456
+first_order_category,housewares,5634,158,0.028
+first_order_category,watches_gifts,5438,119,0.0219
+first_order_category,telephony,4093,102,0.0249
+first_order_category,auto,3786,81,0.0214
+first_order_category,toys,3754,93,0.0248
+first_order_category,uncategorized,2079,79,0.038
+first_order_delivery,delivered_on_or_before_estimate,86904,2716,0.0313
+first_order_delivery,delivered_late,6344,161,0.0254
+first_order_payment_type,credit_card,73909,2305,0.0312
+first_order_payment_type,boleto,19189,590,0.0307
+first_order_payment_type,voucher,1482,67,0.0452
+first_order_payment_type,debit_card,1435,34,0.0237
+first_order_payment_type,no_payment_recorded,79,1,0.0127
+first_order_payment_type,not_defined,2,0,0.0
+first_order_review_band,4-5 stars,73513,2325,0.0316
+first_order_review_band,1-2 stars,13998,415,0.0296
+first_order_review_band,3 stars,7849,228,0.029

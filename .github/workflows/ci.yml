@@ -1,0 +1,52 @@
+name: dbt build
+
+# Proves the warehouse is reproducible from the raw extracts alone:
+# download -> raw views -> dbt build (models + all data tests) -> lint -> export.
+# Any failing dbt test fails this workflow, which is the point.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install sqlfluff==4.4.0 sqlfluff-templater-dbt==4.4.0
+
+      - name: Download the Olist extracts (mirror URLs from data/SOURCE.md)
+        run: |
+          base=https://raw.githubusercontent.com/olist/work-at-olist-data/master/datasets
+          for f in olist_customers_dataset.csv olist_orders_dataset.csv \
+                   olist_order_items_dataset.csv olist_order_payments_dataset.csv \
+                   olist_order_reviews_dataset.csv olist_products_dataset.csv \
+                   olist_sellers_dataset.csv product_category_name_translation.csv; do
+            curl -fL "$base/$f" -o "data/$f"
+          done
+
+      - name: Create raw layer views
+        run: python scripts/load_raw.py
+
+      - name: dbt build (models + data tests; a failing test fails CI)
+        run: dbt build --profiles-dir .
+
+      - name: Lint SQL (sqlfluff, dbt templater; scoping documented in .sqlfluff)
+        run: sqlfluff lint models tests
+
+      - name: Export analysis outputs
+        run: python scripts/export_outputs.py
+
+      - name: Upload analysis outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-outputs
+          path: outputs/

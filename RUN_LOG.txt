@@ -44,3 +44,42 @@ $ venv/bin/python scripts/export_outputs.py
 outputs/cohort_retention.csv: 225 rows
 outputs/segment_retention.csv: 27 rows
 === END ===
+
+=== UPGRADE RUN: 2026-10-23 UTC (polish pass, CI sequence executed locally in workflow order) ===
+$ rm -f warehouse.duckdb && rm -rf target
+$ curl downloads (8 CSVs, mirror in data/SOURCE.md)
+downloaded data/olist_customers_dataset.csv
+downloaded data/olist_orders_dataset.csv
+downloaded data/olist_order_items_dataset.csv
+downloaded data/olist_order_payments_dataset.csv
+downloaded data/olist_order_reviews_dataset.csv
+downloaded data/olist_products_dataset.csv
+downloaded data/olist_sellers_dataset.csv
+downloaded data/product_category_name_translation.csv
+$ venv/bin/python scripts/load_raw.py
+raw_olist.customers: 99441 rows
+raw_olist.orders: 99441 rows
+raw_olist.order_items: 112650 rows
+raw_olist.order_payments: 103886 rows
+raw_olist.order_reviews: 99224 rows
+raw_olist.products: 32951 rows
+raw_olist.sellers: 3095 rows
+raw_olist.product_category_name_translation: 71 rows
+$ venv/bin/dbt build --profiles-dir .
+03:24:10  53 of 56 OK created sql table model main.repeat_drivers ........................ [OK in 2.55s]
+03:24:10  56 of 56 NO-OP exposure retention_analysis_outputs ............................. [NO-OP in 0.00s]
+03:24:10  
+03:24:10  Finished running 2 exposures, 10 table models, 36 data tests, 8 view models in 0 hours 0 minutes and 20.52 seconds (20.52s).
+03:24:10  
+03:24:10  Completed successfully
+03:24:10  
+03:24:10  Done. PASS=54 WARN=0 ERROR=0 SKIP=0 NO-OP=2 REUSED=0 TOTAL=56
+$ venv/bin/sqlfluff lint models tests
+=== [dbt templater] Project Compiled.
+All Finished!
+sqlfluff exit: 0
+$ venv/bin/python scripts/export_outputs.py
+outputs/cohort_retention.csv: 225 rows
+outputs/segment_retention.csv: 27 rows
+outputs/repeat_drivers.csv: 23 rows
+outputs/data_quality_report.csv: 6 rows
